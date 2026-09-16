@@ -185,3 +185,19 @@ def when_I_try_to_append_a_run_with_a_missing_character_style(context: Context):
 def then_the_hyperlinks_runs_remain_unchanged(context: Context):
     assert context.hyperlink.text == context.original_text
     assert len(context.hyperlink.runs) == context.original_run_count
+
+
+@when("I create a hyperlink with a {value} tooltip")
+def when_I_create_a_hyperlink_with_a_tooltip(context: Context, value: str):
+    context.tooltip = {"populated": 'Café "tips" & details', "empty": "", "absent": None}[value]
+    context.paragraph.add_hyperlink("label", address="guide.pdf", tooltip=context.tooltip)
+
+
+@when("I try to create a hyperlink with invalid XML in its tooltip")
+def when_I_try_to_create_a_hyperlink_with_an_invalid_tooltip(context: Context):
+    context.original_relationships = dict(context.paragraph.part.rels)
+    try:
+        context.paragraph.add_hyperlink("label", address="guide.pdf", tooltip="bad\x00tooltip")
+    except ValueError:
+        return
+    raise AssertionError("Expected a ValueError for the invalid XML characters")
