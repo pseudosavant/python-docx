@@ -123,6 +123,19 @@ class Hyperlink(StoryChild):
         return self._hyperlink.text
 
     @property
+    def tooltip(self) -> str | None:
+        """Text displayed when the pointer rests over this hyperlink.
+
+        |None| means no tooltip is specified. Assigning |None| removes the
+        tooltip. An empty string specifies an empty tooltip.
+        """
+        return self._hyperlink.tooltip
+
+    @tooltip.setter
+    def tooltip(self, value: str | None):
+        self._hyperlink.tooltip = value
+
+    @property
     def url(self) -> str:
         """Convenience property to get web URLs from hyperlinks that contain them.
 

@@ -3,13 +3,11 @@ Feature: Read and change hyperlink tooltips
   As a developer using python-docx
   I need to distinguish absent, empty, and populated tooltips
 
-  @wip
   Scenario: Read an absent tooltip
     Given a hyperlink authoring paragraph in a body
      When I create a hyperlink without an initial label
      Then the hyperlink has no tooltip
 
-  @wip
   Scenario Outline: Set or clear a tooltip
     Given a hyperlink authoring paragraph in a body
      When I create a hyperlink without an initial label
@@ -22,7 +20,6 @@ Feature: Read and change hyperlink tooltips
       | empty     |
       | absent    |
 
-  @wip
   Scenario: Reject invalid tooltip characters
     Given a hyperlink authoring paragraph in a body
      When I create a hyperlink without an initial label

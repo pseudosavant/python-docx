@@ -91,6 +91,27 @@ class DescribeHyperlink:
 
         assert hlink.xml == xml("w:hyperlink")
 
+    @pytest.mark.parametrize("value", [None, "", "tip"])
+    def it_reads_its_tooltip_from_the_xml_element(
+        self, request: FixtureRequest, value: str | None, fake_parent: t.ProvidesStoryPart
+    ):
+        tooltip_prop = property_mock(request, CT_Hyperlink, "tooltip", return_value=value)
+        hyperlink = Hyperlink(cast(CT_Hyperlink, element("w:hyperlink")), fake_parent)
+
+        assert hyperlink.tooltip == value
+        tooltip_prop.assert_called_once_with()
+
+    @pytest.mark.parametrize("value", [None, "", "tip"])
+    def it_delegates_tooltip_assignment_to_the_xml_element(
+        self, request: FixtureRequest, value: str | None, fake_parent: t.ProvidesStoryPart
+    ):
+        tooltip_prop = property_mock(request, CT_Hyperlink, "tooltip")
+        hyperlink = Hyperlink(cast(CT_Hyperlink, element("w:hyperlink")), fake_parent)
+
+        hyperlink.tooltip = value
+
+        tooltip_prop.assert_called_once_with(value)
+
     @pytest.mark.parametrize(
         ("hlink_cxml", "expected_value"),
         [
