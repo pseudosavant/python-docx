@@ -48,7 +48,7 @@ class DescribeHyperlinkAuthoring:
         paragraph = paragraph_in(document, story)
         paragraph.style = "Heading 1"
         paragraph.add_run("Before ").italic = True
-        hyperlink = paragraph.add_hyperlink(address=address)
+        hyperlink = paragraph.add_hyperlink(address=address, tooltip='Café "tips" & details')
         assert hyperlink.runs == []
         hyperlink.add_run(" Café\t").bold = True
         hyperlink.add_run("code\n", "Emphasis").font.name = "Consolas"
@@ -76,6 +76,8 @@ class DescribeHyperlinkAuthoring:
         assert paragraph.runs[1].bold is True
         assert hyperlink.url == hyperlink.address == adjacent.url == address
         assert hyperlink.fragment == ""
+        assert hyperlink.tooltip == 'Café "tips" & details'
+        assert adjacent.tooltip is None
         assert hyperlink.runs[0].bold is True
         assert hyperlink.runs[1].style.name == "Emphasis"
         assert hyperlink.runs[1].font.name == "Consolas"
@@ -143,3 +145,16 @@ class DescribeHyperlinkAuthoring:
             "Hyperlink",
             "Emphasis",
         ]
+
+    @pytest.mark.parametrize("value", [None, "", 'Café "tips" & details'])
+    def it_round_trips_tooltip_replacement(self, value: str | None):
+        document = Document()
+        hyperlink = document.add_paragraph().add_hyperlink(
+            "label", address="guide.pdf", tooltip="old"
+        )
+        hyperlink.tooltip = value
+
+        stream = BytesIO()
+        document.save(stream)
+
+        assert Document(stream).paragraphs[0].hyperlinks[0].tooltip == value

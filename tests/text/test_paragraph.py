@@ -61,6 +61,21 @@ class DescribeParagraph:
         else:
             add_run_.assert_not_called()
 
+    @pytest.mark.parametrize("tooltip", [None, "", "Link details"])
+    def it_delegates_the_initial_tooltip_to_the_hyperlink(
+        self,
+        request: FixtureRequest,
+        tooltip: str | None,
+        hyperlink_story_part_: Mock,
+        fake_parent: t.ProvidesStoryPart,
+    ):
+        tooltip_ = property_mock(request, Hyperlink, "tooltip")
+        paragraph = Paragraph(cast(CT_P, element("w:p")), fake_parent)
+
+        paragraph.add_hyperlink(address="guide.pdf", tooltip=tooltip)
+
+        tooltip_.assert_called_once_with(tooltip)
+
     @pytest.mark.parametrize(
         "address",
         ["https://example.com/a%20b?q=1&b=2#part", "mailto:a@example.com", "../a b.docx"],
@@ -86,6 +101,8 @@ class DescribeParagraph:
             ({"address": ""}, ValueError),
             ({"address": "#bookmark"}, ValueError),
             ({"address": "bad\x00target"}, ValueError),
+            ({"address": "guide.pdf", "tooltip": 0}, TypeError),
+            ({"address": "guide.pdf", "tooltip": "bad\x00tooltip"}, ValueError),
             ({"address": "guide.pdf", "text": 0}, TypeError),
             ({"address": "guide.pdf", "text": "bad\x00text"}, ValueError),
         ],

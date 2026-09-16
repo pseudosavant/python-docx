@@ -31,7 +31,9 @@ class Paragraph(StoryChild):
         super(Paragraph, self).__init__(parent)
         self._p = self._element = p
 
-    def add_hyperlink(self, text: str | None = None, *, address: str) -> Hyperlink:
+    def add_hyperlink(
+        self, text: str | None = None, *, address: str, tooltip: str | None = None
+    ) -> Hyperlink:
         """Append an external hyperlink containing `text` and return its proxy.
 
         `address` is a non-empty external destination, such as a web URL, mailto
@@ -43,7 +45,8 @@ class Paragraph(StoryChild):
         Use :meth:`Hyperlink.add_run` to add individually formatted label runs.
         No character style is applied automatically.
 
-        Invalid argument types raise :exc:`TypeError`.
+        `tooltip` is optional hover text. |None| omits it and an empty string
+        specifies an empty tooltip. Invalid argument types raise :exc:`TypeError`.
         Strings must contain only characters allowed in XML.
         """
         XsdString.validate(address)
@@ -53,6 +56,7 @@ class Paragraph(StoryChild):
         CT_Relationship.new("rId0", RT.HYPERLINK, address)
         hyperlink_elm = CT_Hyperlink.new()
         hyperlink = Hyperlink(hyperlink_elm, self)
+        hyperlink.tooltip = tooltip
         if text is not None:
             XsdString.validate(text)
             if text:

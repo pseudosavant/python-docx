@@ -37,7 +37,6 @@ Feature: Append an external hyperlink to a paragraph
      When I try to create a hyperlink with an empty address
      Then no hyperlink or relationship has been added
 
-  @wip
   Scenario Outline: Supply a tooltip when creating a hyperlink
     Given a hyperlink authoring paragraph in a body
      When I create a hyperlink with a <value> tooltip
@@ -49,7 +48,6 @@ Feature: Append an external hyperlink to a paragraph
       | empty     |
       | absent    |
 
-  @wip
   Scenario: Reject an invalid creation tooltip without changing the document
     Given a hyperlink authoring paragraph in a body
      When I try to create a hyperlink with invalid XML in its tooltip
