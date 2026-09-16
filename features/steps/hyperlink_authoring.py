@@ -6,13 +6,15 @@ from behave import given, then, when
 from behave.runner import Context
 
 from docx import Document
+from docx.enum.style import WD_STYLE_TYPE
 
-from helpers import test_docx
+from helpers import test_docx, test_file
 
 
 @given("an existing hyperlink for authoring")
 def given_an_existing_hyperlink_for_authoring(context: Context):
     context.document = Document(test_docx("par-hyperlinks"))
+    context.document.styles.add_style("Link emphasis", WD_STYLE_TYPE.CHARACTER)
     context.hyperlink = context.document.paragraphs[1].hyperlinks[0]
     context.original_text = context.hyperlink.text
     context.original_run_count = len(context.hyperlink.runs)
@@ -21,7 +23,7 @@ def given_an_existing_hyperlink_for_authoring(context: Context):
 @when("I append formatted runs to the hyperlink")
 def when_I_append_formatted_runs_to_the_hyperlink(context: Context):
     context.hyperlink.add_run(" Café\t").bold = True
-    context.hyperlink.add_run("code\n", "Emphasis").font.name = "Consolas"
+    context.hyperlink.add_run("code\n", "Link emphasis").font.name = "Consolas"
 
 
 @then("the appended runs retain their text and formatting after saving")
@@ -31,13 +33,13 @@ def then_the_appended_runs_retain_their_text_and_formatting(context: Context):
     hyperlink = Document(stream).paragraphs[1].hyperlinks[0]
     assert hyperlink.text == context.original_text + " Café\tcode\n"
     assert hyperlink.runs[-2].bold is True
-    assert hyperlink.runs[-1].style.name == "Emphasis"
+    assert hyperlink.runs[-1].style.name == "Link emphasis"
     assert hyperlink.runs[-1].font.name == "Consolas"
 
 
 @when("I append a picture run to the hyperlink")
 def when_I_append_a_picture_run_to_the_hyperlink(context: Context):
-    context.picture = context.hyperlink.add_run().add_picture("features/steps/test_files/python-icon.jpeg")
+    context.picture = context.hyperlink.add_run().add_picture(test_file("python-icon.jpeg"))
 
 
 @then("the hyperlink contains the picture after saving")
