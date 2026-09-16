@@ -31,6 +31,10 @@ class CT_Hyperlink(BaseOxmlElement):
         "w:history", ST_OnOff, default=True
     )
 
+    tooltip: str | None = OptionalAttribute(  # pyright: ignore[reportAssignmentType]
+        "w:tooltip", ST_String
+    )
+
     r = ZeroOrMore("w:r")
 
     @staticmethod

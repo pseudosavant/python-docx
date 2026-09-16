@@ -1,5 +1,7 @@
 """Test suite for the docx.oxml.text.hyperlink module."""
 
+from __future__ import annotations
+
 from typing import cast
 
 import pytest
@@ -19,6 +21,35 @@ class DescribeCT_Hyperlink:
         assert isinstance(hyperlink, CT_Hyperlink)
         assert hyperlink.xml == xml("w:hyperlink")
         assert hyperlink.getparent() is None
+
+    @pytest.mark.parametrize(
+        ("cxml", "expected"), [("w:hyperlink", None), ("w:hyperlink{w:tooltip=tip}", "tip")]
+    )
+    def it_reads_the_tooltip_attribute(self, cxml: str, expected: str | None):
+        assert cast(CT_Hyperlink, element(cxml)).tooltip == expected
+
+    @pytest.mark.parametrize("value", [None, "", 'A "tip" & more'])
+    def it_sets_or_removes_the_tooltip_attribute(self, value: str | None):
+        hyperlink = cast(CT_Hyperlink, element("w:hyperlink{r:id=rId7,w:tooltip=old}"))
+
+        hyperlink.tooltip = value
+
+        assert (
+            hyperlink.get("{http://schemas.openxmlformats.org/wordprocessingml/2006/main}tooltip")
+            == value
+        )
+        assert hyperlink.rId == "rId7"
+
+    @pytest.mark.parametrize(("value", "exception"), [(0, TypeError), ("bad\x00tip", ValueError)])
+    def it_rejects_an_invalid_tooltip_without_changing_the_attribute(
+        self, value: object, exception: type[Exception]
+    ):
+        hyperlink = cast(CT_Hyperlink, element("w:hyperlink{w:tooltip=old}"))
+
+        with pytest.raises(exception):
+            hyperlink.tooltip = cast(str, value)
+
+        assert hyperlink.xml == xml("w:hyperlink{w:tooltip=old}")
 
     def it_has_a_relationship_that_contains_the_hyperlink_address(self):
         cxml = 'w:hyperlink{r:id=rId6}/w:r/w:t"post"'
