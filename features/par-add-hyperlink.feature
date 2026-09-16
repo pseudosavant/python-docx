@@ -3,7 +3,6 @@ Feature: Append an external hyperlink to a paragraph
   As a developer using python-docx
   I need to create a hyperlink on the paragraph's owning story part
 
-  @wip
   Scenario Outline: Create a hyperlink in a story
     Given a hyperlink authoring paragraph in a <story>
      When I append an external hyperlink between ordinary runs
@@ -16,7 +15,6 @@ Feature: Append an external hyperlink to a paragraph
       | header |
       | footer |
 
-  @wip
   Scenario Outline: Preserve the supplied destination
     Given a hyperlink authoring paragraph in a body
      When I append a hyperlink to <address>
@@ -29,13 +27,11 @@ Feature: Append an external hyperlink to a paragraph
       | ../guide with spaces.docx                           |
       | custom:resource                                    |
 
-  @wip
   Scenario: Populate an empty hyperlink
     Given a hyperlink authoring paragraph in a body
      When I create a hyperlink without an initial label
      Then I can build its label by appending runs
 
-  @wip
   Scenario: Reject an empty address without changing the document
     Given a hyperlink authoring paragraph in a body
      When I try to create a hyperlink with an empty address
