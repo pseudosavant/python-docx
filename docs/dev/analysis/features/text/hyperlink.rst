@@ -188,7 +188,7 @@ and addresses typed into the document directly don't, based on my limited experi
     >>> hyperlink.text
     'an excellent Wikipedia article on ferrets'
 
-**Add an external hyperlink** (not yet implemented)::
+**Add an external hyperlink with a separate fragment** (broader proposal)::
 
     >>> hyperlink = paragraph.add_hyperlink(
     ...   'About', address='http://us.com', fragment='about'
