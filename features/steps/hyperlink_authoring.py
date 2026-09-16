@@ -96,6 +96,40 @@ def then_no_hyperlink_or_relationship_has_been_added(context: Context):
     assert dict(context.paragraph.part.rels) == context.original_relationships
 
 
+@then("the hyperlink has no tooltip")
+def then_the_hyperlink_has_no_tooltip(context: Context):
+    assert context.hyperlink.tooltip is None
+
+
+@when("I assign a {value} tooltip to the hyperlink")
+def when_I_assign_a_tooltip(context: Context, value: str):
+    context.tooltip = {"populated": 'Café "tips" & details', "empty": "", "absent": None}[value]
+    context.hyperlink.tooltip = "old"
+    context.hyperlink.tooltip = context.tooltip
+
+
+@then("the assigned tooltip survives saving")
+def then_the_assigned_tooltip_survives_saving(context: Context):
+    stream = BytesIO()
+    context.document.save(stream)
+    assert Document(stream).paragraphs[0].hyperlinks[0].tooltip == context.tooltip
+
+
+@when("I try to assign a tooltip containing invalid XML characters")
+def when_I_try_to_assign_an_invalid_tooltip(context: Context):
+    context.hyperlink.tooltip = "old"
+    try:
+        context.hyperlink.tooltip = "invalid\x00tooltip"
+    except ValueError:
+        return
+    raise AssertionError("Expected a ValueError for the invalid XML characters")
+
+
+@then("the previous tooltip is preserved")
+def then_the_previous_tooltip_is_preserved(context: Context):
+    assert context.hyperlink.tooltip == "old"
+
+
 @given("an existing hyperlink for authoring")
 def given_an_existing_hyperlink_for_authoring(context: Context):
     context.document = Document(test_docx("par-hyperlinks"))
