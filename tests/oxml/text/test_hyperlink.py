@@ -7,11 +7,18 @@ import pytest
 from docx.oxml.text.hyperlink import CT_Hyperlink
 from docx.oxml.text.run import CT_R
 
-from ...unitutil.cxml import element
+from ...unitutil.cxml import element, xml
 
 
 class DescribeCT_Hyperlink:
     """Unit-test suite for the CT_Hyperlink (<w:hyperlink>) element."""
+
+    def it_can_create_a_detached_hyperlink(self):
+        hyperlink = CT_Hyperlink.new()
+
+        assert isinstance(hyperlink, CT_Hyperlink)
+        assert hyperlink.xml == xml("w:hyperlink")
+        assert hyperlink.getparent() is None
 
     def it_has_a_relationship_that_contains_the_hyperlink_address(self):
         cxml = 'w:hyperlink{r:id=rId6}/w:r/w:t"post"'
