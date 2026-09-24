@@ -3,6 +3,13 @@
 Release History
 ---------------
 
+1.3.9 (2026-09-24)
+++++++++++++++++++
+
+- Add Paragraph.add_checkbox() for clickable Word check box content controls.
+- Expose Paragraph.checkboxes and a writable CheckBox.checked state.
+
+
 1.3.8 (2026-09-24)
 ++++++++++++++++++
 
