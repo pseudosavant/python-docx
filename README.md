@@ -6,6 +6,8 @@ This fork starts from upstream 1.2.0. The packaging setup preserves the upstream
 
 Version 1.3.1 adds public external hyperlink authoring with `Paragraph.add_hyperlink()`, formatted label runs with `Hyperlink.add_run()`, and read/write tooltip support. See the [text API documentation](docs/api/text.rst).
 
+Version 1.3.2 adds `InlineShape.description` and `InlineShape.title` for reading and writing image alternative text. See the [image metadata documentation](docs/user/shapes.rst).
+
 ## Installation
 
 ```

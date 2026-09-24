@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import argparse
 import ast
+import base64
 import os
 from importlib import metadata
+from io import BytesIO
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -68,6 +70,14 @@ def main() -> None:
             )
             hyperlink.add_run("Example ")
             hyperlink.add_run("bold").bold = True
+            image = BytesIO(
+                base64.b64decode(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII="
+                )
+            )
+            picture = document.paragraphs[-1].add_run().add_picture(image)
+            picture.description = "Pixel description"
+            picture.title = "Pixel title"
             document.save(output)
             reopened = docx.Document(output)
             assert reopened.theme_fonts.major_latin == "Aptos Display"
@@ -79,6 +89,8 @@ def main() -> None:
             assert saved_link.url == "https://example.com"
             assert saved_link.tooltip == "Details"
             assert saved_link.runs[1].bold is True
+            assert reopened.inline_shapes[0].description == "Pixel description"
+            assert reopened.inline_shapes[0].title == "Pixel title"
             if [paragraph.text for paragraph in reopened.paragraphs] != [
                 "Fork wheel smoke test",
                 "Editable body text",

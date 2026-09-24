@@ -3,6 +3,14 @@
 Release History
 ---------------
 
+1.3.2 (2026-09-24)
+++++++++++++++++++
+
+- Add InlineShape.description and InlineShape.title for image alternative text.
+- Preserve independent descriptions for repeated images and distinguish missing,
+  empty, and cleared values.
+
+
 1.3.1 (2026-09-24)
 ++++++++++++++++++
 
