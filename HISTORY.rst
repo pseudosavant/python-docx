@@ -3,6 +3,15 @@
 Release History
 ---------------
 
+1.3.0 (unreleased fork release)
+++++++++++++++++++++++++++++++
+
+- Publish the independent ps-python-docx distribution, preserving the docx import.
+- Add Document.theme_fonts for the major and minor Latin theme typefaces.
+- Add Font.theme_font, Styles.default_font, and read-only linked_style access.
+- Preserve theme inheritance without applying fonts to individual runs.
+
+
 1.2.0 (2025-06-16)
 ++++++++++++++++++
 

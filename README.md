@@ -2,7 +2,7 @@
 
 *ps-python-docx* is John Paul Ellis's fork of [python-docx](https://github.com/python-openxml/python-docx), a Python library for reading, creating, and updating Microsoft Word 2007+ (.docx) files. It is published independently and is not an official upstream release.
 
-This fork starts from upstream 1.2.0. The packaging setup preserves the upstream API and the `docx` import name. Additional authoring APIs will be documented as they are integrated. The original MIT license and upstream attribution are preserved.
+This fork starts from upstream 1.2.0. The packaging setup preserves the upstream API and the `docx` import name. Version 1.3.0 adds public theme font and style inheritance APIs. See the [theme API documentation](docs/api/theme.rst). The original MIT license and upstream attribution are preserved.
 
 ## Installation
 

@@ -55,10 +55,21 @@ def main() -> None:
         with TemporaryDirectory() as directory:
             output = Path(directory) / "smoke.docx"
             document = docx.Document()
+            document.theme_fonts.major_latin = "Aptos Display"
+            document.theme_fonts.minor_latin = "Aptos"
+            document.styles.default_font.theme_font = "minor"
+            document.styles["Normal"].font.theme_font = "minor"
+            document.styles["Heading 1"].font.theme_font = "major"
+            document.styles["Heading 1"].linked_style.font.theme_font = "major"
             document.add_heading("Fork wheel smoke test", level=1)
             document.add_paragraph("Editable body text")
             document.save(output)
             reopened = docx.Document(output)
+            assert reopened.theme_fonts.major_latin == "Aptos Display"
+            assert reopened.theme_fonts.minor_latin == "Aptos"
+            assert reopened.styles.default_font.theme_font == "minor"
+            assert reopened.styles["Heading 1"].font.theme_font == "major"
+            assert reopened.styles["Heading 1"].linked_style.font.theme_font == "major"
             if [paragraph.text for paragraph in reopened.paragraphs] != [
                 "Fork wheel smoke test",
                 "Editable body text",

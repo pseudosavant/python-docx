@@ -2,7 +2,7 @@
 
 This fork publishes the `ps-python-docx` distribution from `pseudosavant/python-docx`. Its import package remains `docx`. Keep the original upstream attribution and MIT license.
 
-The version comes from `src/docx/__init__.py`. Fork versions describe this distribution. They do not represent releases approved by the upstream project. The initial publishing setup leaves the upstream base version at 1.2.0. An additive release containing the new public authoring APIs is a candidate for 1.3.0.
+The version comes from `src/docx/__init__.py`. Fork versions describe this distribution. They do not represent releases approved by the upstream project. Version 1.3.0 adds public theme font and style inheritance APIs to the upstream 1.2.0 baseline.
 
 ## One-time configuration
 
@@ -42,3 +42,15 @@ uv run --locked --no-dev --group release twine check dist/*
 ```
 
 The dedicated groups avoid installing the upstream project's old documentation toolchain just to test or release the fork.
+
+## Preparing upstream contributions
+
+The `codex/theme-font-api` branch starts at the upstream-compatible `master` base
+and contains only the theme API, style inheritance support, documentation, and
+tests. It does not rename the distribution or change the upstream version.
+
+The publishing branch carries those feature commits separately from fork
+packaging and the 1.3.0 version change. Submit the feature branch upstream when
+ready. Keep upstream fixes on that branch first, then cherry-pick them onto the
+publishing branch. Avoid submitting fork branding, release workflows, version
+numbers, or Markdown-specific policy with the library API.
