@@ -13,7 +13,7 @@ from docx.api import Document
 if TYPE_CHECKING:
     from docx.opc.part import Part
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 
 __all__ = ["Document"]
@@ -32,6 +32,7 @@ from docx.parts.image import ImagePart
 from docx.parts.numbering import NumberingPart
 from docx.parts.settings import SettingsPart
 from docx.parts.styles import StylesPart
+from docx.parts.theme import ThemePart
 
 
 def part_class_selector(content_type: str, reltype: str) -> Type[Part] | None:
@@ -49,6 +50,7 @@ PartFactory.part_type_for[CT.WML_HEADER] = HeaderPart
 PartFactory.part_type_for[CT.WML_NUMBERING] = NumberingPart
 PartFactory.part_type_for[CT.WML_SETTINGS] = SettingsPart
 PartFactory.part_type_for[CT.WML_STYLES] = StylesPart
+PartFactory.part_type_for[CT.OFC_THEME] = ThemePart
 
 del (
     CT,
@@ -61,5 +63,6 @@ del (
     PartFactory,
     SettingsPart,
     StylesPart,
+    ThemePart,
     part_class_selector,
 )

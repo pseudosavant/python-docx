@@ -1,0 +1,4 @@
+# Preserve byte-sensitive XML templates and test fixtures on Windows.
+*.xml text eol=lf
+*.rels text eol=lf
+tests/test_files/snippets/*.txt text eol=lf
