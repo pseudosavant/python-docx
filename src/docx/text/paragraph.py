@@ -8,10 +8,12 @@ from docx.enum.style import WD_STYLE_TYPE
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.opc.oxml import CT_Relationship
 from docx.oxml.simpletypes import XsdString
+from docx.oxml.text.checkbox import new_checkbox
 from docx.oxml.text.hyperlink import CT_Hyperlink
 from docx.oxml.text.run import CT_R
 from docx.shared import StoryChild
 from docx.styles.style import ParagraphStyle
+from docx.text.checkbox import CheckBox
 from docx.text.hyperlink import Hyperlink
 from docx.text.pagebreak import RenderedPageBreak
 from docx.text.parfmt import ParagraphFormat
@@ -30,6 +32,23 @@ class Paragraph(StoryChild):
     def __init__(self, p: CT_P, parent: t.ProvidesStoryPart):
         super(Paragraph, self).__init__(parent)
         self._p = self._element = p
+
+    def add_checkbox(self, checked: bool = False) -> CheckBox:
+        """Append a clickable Word check box and return its proxy.
+
+        The control is placed at the end of this paragraph. Use ``checked=True``
+        to create it in the checked state.
+        """
+        if not isinstance(checked, bool):  # pyright: ignore[reportUnnecessaryIsInstance]
+            raise TypeError("checked must be a bool")
+        sdt = new_checkbox(checked)
+        self._p.append(sdt)
+        return CheckBox(sdt, self)
+
+    @property
+    def checkboxes(self) -> List[CheckBox]:
+        """Clickable check boxes directly inside this paragraph."""
+        return [CheckBox(sdt, self) for sdt in self._p.xpath("./w:sdt[w:sdtPr/w14:checkbox]")]
 
     def add_hyperlink(
         self,
