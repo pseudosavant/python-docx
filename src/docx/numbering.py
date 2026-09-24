@@ -50,7 +50,7 @@ class ListInstance:
         num_id = None
         inherited_level = None
         for ancestor in chain:
-            ppr = cast(CT_PPr | None, ancestor.element.find(qn("w:pPr")))
+            ppr = cast("CT_PPr | None", ancestor.element.find(qn("w:pPr")))
             if ppr is None or ppr.numPr is None:
                 continue
             if ppr.numPr.numId is not None:
