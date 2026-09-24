@@ -3,8 +3,14 @@
 Release History
 ---------------
 
-1.3.0 (unreleased fork release)
-++++++++++++++++++++++++++++++
+1.3.1 (2026-09-24)
+++++++++++++++++++
+
+- Add external hyperlink creation, formatted label runs, and tooltip support.
+
+
+1.3.0 (2026-09-24)
+++++++++++++++++++
 
 - Publish the independent ps-python-docx distribution, preserving the docx import.
 - Add Document.theme_fonts for the major and minor Latin theme typefaces.

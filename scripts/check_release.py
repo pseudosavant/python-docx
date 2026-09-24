@@ -63,6 +63,11 @@ def main() -> None:
             document.styles["Heading 1"].linked_style.font.theme_font = "major"
             document.add_heading("Fork wheel smoke test", level=1)
             document.add_paragraph("Editable body text")
+            hyperlink = document.add_paragraph().add_hyperlink(
+                address="https://example.com", tooltip="Details"
+            )
+            hyperlink.add_run("Example ")
+            hyperlink.add_run("bold").bold = True
             document.save(output)
             reopened = docx.Document(output)
             assert reopened.theme_fonts.major_latin == "Aptos Display"
@@ -70,9 +75,14 @@ def main() -> None:
             assert reopened.styles.default_font.theme_font == "minor"
             assert reopened.styles["Heading 1"].font.theme_font == "major"
             assert reopened.styles["Heading 1"].linked_style.font.theme_font == "major"
+            saved_link = reopened.paragraphs[-1].hyperlinks[0]
+            assert saved_link.url == "https://example.com"
+            assert saved_link.tooltip == "Details"
+            assert saved_link.runs[1].bold is True
             if [paragraph.text for paragraph in reopened.paragraphs] != [
                 "Fork wheel smoke test",
                 "Editable body text",
+                "Example bold",
             ]:
                 raise SystemExit("Installed wheel did not round-trip document content.")
     print(f"Verified {PACKAGE_NAME} {version}")

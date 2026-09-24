@@ -4,6 +4,8 @@
 
 This fork starts from upstream 1.2.0. The packaging setup preserves the upstream API and the `docx` import name. Version 1.3.0 adds public theme font and style inheritance APIs. See the [theme API documentation](docs/api/theme.rst). The original MIT license and upstream attribution are preserved.
 
+Version 1.3.1 adds public external hyperlink authoring with `Paragraph.add_hyperlink()`, formatted label runs with `Hyperlink.add_run()`, and read/write tooltip support. See the [text API documentation](docs/api/text.rst).
+
 ## Installation
 
 ```
