@@ -15,7 +15,8 @@ from docx.shared import lazyproperty
 from docx.theme import ThemeFonts
 
 if TYPE_CHECKING:
-    from docx.oxml.xmlchemy import BaseOxmlElement
+    from lxml.etree import _Element  # pyright: ignore[reportPrivateUsage]
+
     from docx.package import Package
 
 
@@ -45,7 +46,7 @@ class ThemePart(Part):
         return ThemeFonts(scheme)
 
     @lazyproperty
-    def _theme(self) -> BaseOxmlElement:
+    def _theme(self) -> _Element:
         try:
             return parse_xml(super().blob)
         except SyntaxError as exc:
