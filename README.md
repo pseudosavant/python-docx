@@ -12,6 +12,8 @@ Version 1.3.3 adds independent list instances, starts and restarts, template lev
 
 Version 1.3.4 adds bookmark creation and lookup with `Document.bookmarks`, plus internal hyperlinks with `Paragraph.add_hyperlink(anchor=...)`. See the [bookmark documentation](docs/user/bookmarks.rst).
 
+Version 1.3.5 adds native footnote authoring and lookup with `Document.add_footnote()`, `Document.footnotes`, and `Run.footnote_ids`. See the [footnote documentation](docs/user/footnotes.rst).
+
 ## Installation
 
 ```

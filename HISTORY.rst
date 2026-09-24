@@ -3,6 +3,15 @@
 Release History
 ---------------
 
+1.3.5 (2026-09-24)
+++++++++++++++++++
+
+- Add native footnote authoring with deliberate reference placement.
+- Expose existing notes and reference IDs through public APIs.
+- Support editable formatted note paragraphs and story-owned relationships.
+- Preserve existing note content, styles, and numbering settings.
+
+
 1.3.4 (2026-09-24)
 ++++++++++++++++++
 

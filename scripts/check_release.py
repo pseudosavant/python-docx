@@ -84,8 +84,13 @@ def main() -> None:
             sequence.apply(document.add_paragraph("Fourth item", "List Number"))
             document.bookmarks.add("SmokeHeading", paragraph=document.paragraphs[0])
             document.paragraphs[1].add_hyperlink(anchor="SmokeHeading")
+            note = document.add_footnote(document.paragraphs[1].runs[0], "A native footnote")
+            note.paragraphs[0].add_hyperlink("Example", address="https://example.com")
             document.save(output)
             reopened = docx.Document(output)
+            assert len(reopened.footnotes) == 1
+            assert reopened.footnotes.get(1).paragraphs[0].hyperlinks[0].url == "https://example.com"
+            assert reopened.paragraphs[1].runs[1].footnote_ids == (1,)
             assert reopened.bookmarks.get("SmokeHeading").paragraph.text == "Fork wheel smoke test"
             assert reopened.paragraphs[1].hyperlinks[0].fragment == "SmokeHeading"
             assert reopened.theme_fonts.major_latin == "Aptos Display"
