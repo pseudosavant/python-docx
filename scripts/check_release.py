@@ -81,7 +81,7 @@ def main() -> None:
             picture.title = "Pixel title"
             sequence = document.add_list(start=3)
             first_item = document.add_paragraph("Third item", "List Number")
-            assert sequence.continuation_left_indent(first_item) == Inches(0.5)
+            assert sequence.continuation_left_indent(first_item) == Inches(0.25)
             sequence.apply(first_item)
             sequence.apply_continuation(document.add_paragraph("More detail", "List Number"))
             sequence.apply(document.add_paragraph("Fourth item", "List Number"))
