@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        include:
+          - os: windows-latest
+            python-version: "3.13"
+    runs-on: ${{ matrix.os }}
+    env:
+      UV_LINK_MODE: copy
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+      - name: Install locked test dependencies
+        run: uv sync --locked --no-dev --group test
+      - name: Unit tests
+        run: uv run --locked --no-dev --group test pytest -q
+      - name: Acceptance tests
+        run: uv run --locked --no-dev --group test behave --format progress --stop --tags=-wip
+
+  package:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@v10.2.0
+        with:
+          python-version: "3.13"
+          enable-cache: true
+      - name: Install locked release dependencies
+        run: uv sync --locked --no-dev --group release
+      - name: Check package identity and release tag
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: uv run --locked --no-dev --group release python scripts/check_release.py
+      - name: Build distributions
+        run: uv build --no-sources
+      - name: Check distribution metadata
+        run: uv run --locked --no-dev --group release twine check dist/*
+      - name: Test the installed wheel
+        run: |
+          uv venv .wheel-smoke
+          uv pip install --python .wheel-smoke/bin/python dist/*.whl
+          .wheel-smoke/bin/python scripts/check_release.py --installed
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: python-distributions
+          path: dist/
+          if-no-files-found: error

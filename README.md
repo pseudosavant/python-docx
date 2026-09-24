@@ -1,11 +1,13 @@
-# python-docx
+# ps-python-docx
 
-*python-docx* is a Python library for reading, creating, and updating Microsoft Word 2007+ (.docx) files.
+*ps-python-docx* is John Paul Ellis's fork of [python-docx](https://github.com/python-openxml/python-docx), a Python library for reading, creating, and updating Microsoft Word 2007+ (.docx) files. It is published independently and is not an official upstream release.
+
+This fork starts from upstream 1.2.0. The packaging setup preserves the upstream API and the `docx` import name. Additional authoring APIs will be documented as they are integrated. The original MIT license and upstream attribution are preserved.
 
 ## Installation
 
 ```
-pip install python-docx
+pip install ps-python-docx
 ```
 
 ## Example
@@ -23,4 +25,18 @@ pip install python-docx
 'It was a dark and stormy night.'
 ```
 
-More information is available in the [python-docx documentation](https://python-docx.readthedocs.org/en/latest/)
+Install this distribution in place of `python-docx`. Both provide the `docx` package and should not be installed in the same environment.
+
+More information about the inherited API is available in the [upstream documentation](https://python-docx.readthedocs.org/en/latest/). Report fork-specific issues in [this repository](https://github.com/pseudosavant/python-docx/issues).
+
+## Development and releases
+
+Run the unit and acceptance suites without installing the legacy documentation dependencies:
+
+```text
+uv sync --locked --no-dev --group test
+uv run --locked --no-dev --group test pytest -q
+uv run --locked --no-dev --group test behave --format progress --stop --tags=-wip
+```
+
+See [RELEASING.md](RELEASING.md) for the GitHub-to-PyPI release process.
