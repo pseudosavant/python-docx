@@ -16,6 +16,8 @@ Version 1.3.5 adds native footnote authoring and lookup with `Document.add_footn
 
 Version 1.3.6 adds configurable repeating table header rows with `row.repeat_as_header`. See the [table documentation](docs/user/tables.rst).
 
+Version 1.3.7 instantiates DOCX documents from macro-free DOTX templates through `Document()`. It builds on coderamaster's [upstream proposal](https://github.com/python-openxml/python-docx/pull/1537), adding output conversion and preservation tests. See the [document documentation](docs/user/documents.rst).
+
 ## Installation
 
 ```

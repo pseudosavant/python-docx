@@ -3,6 +3,14 @@
 Release History
 ---------------
 
+1.3.7 (2026-09-24)
+++++++++++++++++++
+
+- Instantiate valid DOCX documents from macro-free DOTX inputs and streams.
+- Preserve template content and relationships while converting the main content type.
+- Build on coderamaster's upstream DOTX loading proposal #1537.
+
+
 1.3.6 (2026-09-24)
 ++++++++++++++++++
 

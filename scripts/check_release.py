@@ -89,6 +89,19 @@ def main() -> None:
             table = document.add_table(rows=2, cols=1)
             table.rows[0].repeat_as_header = True
             document.save(output)
+            from zipfile import ZipFile
+            from docx.opc.constants import CONTENT_TYPE as CT
+
+            template = BytesIO()
+            with ZipFile(output) as source, ZipFile(template, "w") as target:
+                for item in source.infolist():
+                    blob = source.read(item.filename)
+                    if item.filename == "[Content_Types].xml":
+                        blob = blob.replace(CT.WML_DOCUMENT_MAIN.encode(), CT.WML_TEMPLATE_MAIN.encode())
+                    target.writestr(item, blob)
+            from_template = docx.Document(template)
+            assert from_template.part.content_type == CT.WML_DOCUMENT_MAIN
+            from_template.save(output)
             reopened = docx.Document(output)
             assert reopened.tables[0].rows[0].repeat_as_header is True
             assert reopened.tables[0].rows[1].repeat_as_header is None
