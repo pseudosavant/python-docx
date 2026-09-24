@@ -17,6 +17,7 @@ from docx.oxml.numbering import CT_Num, CT_Numbering, CT_NumLvl
 from docx.oxml.parser import OxmlElement
 from docx.oxml.text.parfmt import CT_Ind, CT_PPr, CT_TabStops
 from docx.parts.numbering import NumberingPart
+from docx.shared import Length
 from docx.styles.style import ParagraphStyle
 
 if TYPE_CHECKING:
@@ -171,6 +172,33 @@ class ListInstance:
         to the item remains the caller's responsibility.
         """
         selected = self._validate_paragraph(paragraph, level)
+        ind, tabs = self._continuation_format(paragraph, selected)
+        ppr = paragraph._p.get_or_add_pPr()
+        ppr._remove_ind()
+        ppr._insert_ind(ind)
+        if len(tabs):
+            ppr._remove_tabs()
+            ppr._insert_tabs(tabs)
+        numpr = ppr.get_or_add_numPr()
+        numpr._remove_ilvl()
+        numpr.get_or_add_numId().val = 0
+
+    def continuation_left_indent(
+        self, paragraph: Paragraph, *, level: int | None = None
+    ) -> Length | None:
+        """Return the left indent an unnumbered continuation would receive.
+
+        This does not modify `paragraph`. It is useful when a table or other
+        non-paragraph block must align with the text of a list item. |None|
+        means no explicit left indent is supplied by the style or numbering.
+        """
+        selected = self._validate_paragraph(paragraph, level)
+        ind, _ = self._continuation_format(paragraph, selected)
+        return ind.left
+
+    def _continuation_format(
+        self, paragraph: Paragraph, selected: int
+    ) -> tuple[CT_Ind, CT_TabStops]:
         lvl = self._level(selected)
         sources = [s.element.find(qn("w:pPr")) for s in _style_chain(paragraph.style)]
         sources += [lvl.find(qn("w:pPr")), paragraph._p.pPr]
@@ -192,15 +220,7 @@ class ListInstance:
         for attr in ("hanging", "hangingChars", "firstLineChars"):
             ind.attrib.pop(qn(f"w:{attr}"), None)
         ind.set(qn("w:firstLine"), "0")
-        ppr = paragraph._p.get_or_add_pPr()
-        ppr._remove_ind()
-        ppr._insert_ind(ind)
-        if len(tabs):
-            ppr._remove_tabs()
-            ppr._insert_tabs(tabs)
-        numpr = ppr.get_or_add_numPr()
-        numpr._remove_ilvl()
-        numpr.get_or_add_numId().val = 0
+        return ind, tabs
 
     def _level(self, level: int) -> _Element:
         matches = self._num.xpath(f'./w:lvlOverride[@w:ilvl="{level}"]/w:lvl')
