@@ -82,8 +82,12 @@ def main() -> None:
             sequence.apply(document.add_paragraph("Third item", "List Number"))
             sequence.apply_continuation(document.add_paragraph("More detail", "List Number"))
             sequence.apply(document.add_paragraph("Fourth item", "List Number"))
+            document.bookmarks.add("SmokeHeading", paragraph=document.paragraphs[0])
+            document.paragraphs[1].add_hyperlink(anchor="SmokeHeading")
             document.save(output)
             reopened = docx.Document(output)
+            assert reopened.bookmarks.get("SmokeHeading").paragraph.text == "Fork wheel smoke test"
+            assert reopened.paragraphs[1].hyperlinks[0].fragment == "SmokeHeading"
             assert reopened.theme_fonts.major_latin == "Aptos Display"
             assert reopened.theme_fonts.minor_latin == "Aptos"
             assert reopened.styles.default_font.theme_font == "minor"

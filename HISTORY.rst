@@ -3,6 +3,16 @@
 Release History
 ---------------
 
+1.3.4 (2026-09-24)
+++++++++++++++++++
+
+- Add Document.bookmarks for named paragraph targets, consecutive run ranges,
+  and lookup without replacing existing bookmarks.
+- Add internal hyperlinks with Paragraph.add_hyperlink(anchor=...).
+- Validate names and ranges before mutation and reserve existing names and IDs
+  across related Word stories.
+
+
 1.3.3 (2026-09-24)
 ++++++++++++++++++
 
