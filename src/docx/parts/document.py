@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import IO, TYPE_CHECKING, cast
 
 from docx.document import Document
+from docx.opc.constants import CONTENT_TYPE as CT
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 from docx.parts.comments import CommentsPart
 from docx.parts.hdrftr import FooterPart, HeaderPart
@@ -109,6 +110,15 @@ class DocumentPart(StoryPart):
             numbering_part = NumberingPart.new()
             self.relate_to(numbering_part, RT.NUMBERING)
             return numbering_part
+
+    def convert_to_document(self) -> None:
+        """Instantiate a DOCX main part from a macro-free template main part.
+
+        Content and relationships remain unchanged. Package.open() retains the
+        original template type until the document factory calls this method.
+        """
+        if self.content_type == CT.WML_TEMPLATE_MAIN:
+            self._content_type = CT.WML_DOCUMENT_MAIN
 
     def save(self, path_or_stream: str | IO[bytes]):
         """Save this document to `path_or_stream`, which can be either a path to a

@@ -18,7 +18,11 @@ if TYPE_CHECKING:
 
 def Document(docx: str | IO[bytes] | None = None) -> DocumentObject:
     """Return a |Document| object loaded from `docx`, where `docx` can be either a path
-    to a ``.docx`` file (a string) or a file-like object.
+    to a ``.docx`` document or macro-free ``.dotx`` template, or a binary stream.
+
+    DOTX input instantiates a document. Saving produces DOCX package content,
+    regardless of the output filename. The source template is unchanged. Template
+    authoring and macro-enabled DOCM or DOTM input are unsupported.
 
     If `docx` is missing or ``None``, the built-in default document "template" is
     loaded.
@@ -28,6 +32,8 @@ def Document(docx: str | IO[bytes] | None = None) -> DocumentObject:
     if document_part.content_type not in (CT.WML_DOCUMENT_MAIN, CT.WML_TEMPLATE_MAIN):
         tmpl = "file '%s' is not a Word file, content type is '%s'"
         raise ValueError(tmpl % (docx, document_part.content_type))
+    if document_part.content_type == CT.WML_TEMPLATE_MAIN:
+        document_part.convert_to_document()
     return document_part.document
 
 

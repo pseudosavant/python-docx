@@ -92,3 +92,28 @@ Linux to allow Zipfile to open the file.
 
 Okay, so you've got a document open and are pretty sure you can save it
 somewhere later. Next step is to get some content in there ...
+
+Instantiate a document from DOTX
+-------------------------------
+
+A macro-free Word template can be passed to the existing document factory::
+
+    document = Document("brand.dotx")
+    document.add_paragraph("Report content")
+    document.save("report.docx")
+
+Binary streams are also supported. The package main content type determines the
+input format, independent of the filename. DOTX input is instantiated as a DOCX
+document. Saving writes the document main content type, not the template main
+content type. Always use a ``.docx`` output filename. A different extension does
+not select a different output format.
+
+Styles, theme, numbering, sections, body content, headers, footers, images, and
+relationships follow the library's normal preservation behavior. The library
+does not require a blank template or modify the source file when loading it or
+saving to a separate output. It does not attach the source template to the output
+or enable automatic style updates.
+
+Template authoring and macro-enabled DOCM and DOTM input are unsupported. The
+lower-level OPC ``Package.open()`` retains the original template content type.
+The document factory performs the conversion when instantiating a document.
