@@ -88,8 +88,12 @@ def main() -> None:
             note.paragraphs[0].add_hyperlink("Example", address="https://example.com")
             table = document.add_table(rows=2, cols=1)
             table.rows[0].repeat_as_header = True
+            from docx.shared import Inches
+
+            table.left_indent = Inches(0.5)
             document.save(output)
             from zipfile import ZipFile
+
             from docx.opc.constants import CONTENT_TYPE as CT
 
             template = BytesIO()
@@ -97,7 +101,9 @@ def main() -> None:
                 for item in source.infolist():
                     blob = source.read(item.filename)
                     if item.filename == "[Content_Types].xml":
-                        blob = blob.replace(CT.WML_DOCUMENT_MAIN.encode(), CT.WML_TEMPLATE_MAIN.encode())
+                        blob = blob.replace(
+                            CT.WML_DOCUMENT_MAIN.encode(), CT.WML_TEMPLATE_MAIN.encode()
+                        )
                     target.writestr(item, blob)
             from_template = docx.Document(template)
             assert from_template.part.content_type == CT.WML_DOCUMENT_MAIN
@@ -105,8 +111,11 @@ def main() -> None:
             reopened = docx.Document(output)
             assert reopened.tables[0].rows[0].repeat_as_header is True
             assert reopened.tables[0].rows[1].repeat_as_header is None
+            assert reopened.tables[0].left_indent == Inches(0.5)
             assert len(reopened.footnotes) == 1
-            assert reopened.footnotes.get(1).paragraphs[0].hyperlinks[0].url == "https://example.com"
+            assert (
+                reopened.footnotes.get(1).paragraphs[0].hyperlinks[0].url == "https://example.com"
+            )
             assert reopened.paragraphs[1].runs[1].footnote_ids == (1,)
             assert reopened.bookmarks.get("SmokeHeading").paragraph.text == "Fork wheel smoke test"
             assert reopened.paragraphs[1].hyperlinks[0].fragment == "SmokeHeading"

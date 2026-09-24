@@ -3,6 +3,13 @@
 Release History
 ---------------
 
+1.3.8 (2026-09-24)
+++++++++++++++++++
+
+- Add read/write Table.left_indent for direct table indentation.
+- Preserve table style and alignment when changing indentation.
+
+
 1.3.7 (2026-09-24)
 ++++++++++++++++++
 
