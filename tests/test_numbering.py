@@ -107,6 +107,20 @@ class DescribeListInstance:
         assert continuation.paragraph_format.left_indent == Inches(1)
         assert continuation.paragraph_format.first_line_indent == 0
 
+    def it_reports_continuation_indent_without_changing_the_paragraph(self):
+        document = Document()
+        sequence = document.add_list("List Number 2")
+        paragraph = document.add_paragraph("First", "List Number 2")
+        original = paragraph._p.xml
+        assert sequence.continuation_left_indent(paragraph) == Inches(0.5)
+        assert paragraph._p.xml == original
+        paragraph.paragraph_format.left_indent = Inches(1)
+        assert sequence.continuation_left_indent(paragraph) == Inches(1)
+        continuation = document.add_paragraph("More", "List Number 2")
+        expected = sequence.continuation_left_indent(continuation)
+        sequence.apply_continuation(continuation)
+        assert continuation.paragraph_format.left_indent == expected
+
     def it_preserves_multilevel_definitions_and_existing_overrides(self):
         document = Document()
         sequence = document.add_list()

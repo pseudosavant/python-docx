@@ -70,3 +70,9 @@ Word has no list-item container. The caller places continuation paragraphs
 next to their item. Main-document paragraphs and table-cell paragraphs are
 supported. Other stories and cross-document paragraphs are rejected before
 mutation. Undefined levels and invalid starting numbers are also rejected.
+
+For a table or another block that cannot receive numbering, call
+``sequence.continuation_left_indent(item_paragraph)`` to obtain the same
+left indent without changing the item paragraph. For example, assign that
+value to ``table.left_indent`` on a left-aligned table. The result is
+``None`` when the style and numbering define no explicit left indent.
