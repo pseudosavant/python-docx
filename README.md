@@ -8,6 +8,8 @@ Version 1.3.1 adds public external hyperlink authoring with `Paragraph.add_hyper
 
 Version 1.3.2 adds `InlineShape.description` and `InlineShape.title` for reading and writing image alternative text. See the [image metadata documentation](docs/user/shapes.rst).
 
+Version 1.3.3 adds independent list instances, starts and restarts, template levels, and unnumbered continuation paragraphs. See the [list documentation](docs/user/lists.rst).
+
 ## Installation
 
 ```

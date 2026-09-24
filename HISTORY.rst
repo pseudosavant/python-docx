@@ -3,6 +3,16 @@
 Release History
 ---------------
 
+1.3.3 (2026-09-24)
+++++++++++++++++++
+
+- Add Document.add_list and ListInstance for independent native list sequences.
+- Support non-default starts, restart and continuation, template levels, and
+  unnumbered continuation paragraphs with preserved text alignment.
+- Keep interleaved sequences independent in Word without changing source
+  template definitions.
+
+
 1.3.2 (2026-09-24)
 ++++++++++++++++++
 

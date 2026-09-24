@@ -78,6 +78,10 @@ def main() -> None:
             picture = document.paragraphs[-1].add_run().add_picture(image)
             picture.description = "Pixel description"
             picture.title = "Pixel title"
+            sequence = document.add_list(start=3)
+            sequence.apply(document.add_paragraph("Third item", "List Number"))
+            sequence.apply_continuation(document.add_paragraph("More detail", "List Number"))
+            sequence.apply(document.add_paragraph("Fourth item", "List Number"))
             document.save(output)
             reopened = docx.Document(output)
             assert reopened.theme_fonts.major_latin == "Aptos Display"
@@ -85,7 +89,7 @@ def main() -> None:
             assert reopened.styles.default_font.theme_font == "minor"
             assert reopened.styles["Heading 1"].font.theme_font == "major"
             assert reopened.styles["Heading 1"].linked_style.font.theme_font == "major"
-            saved_link = reopened.paragraphs[-1].hyperlinks[0]
+            saved_link = reopened.paragraphs[2].hyperlinks[0]
             assert saved_link.url == "https://example.com"
             assert saved_link.tooltip == "Details"
             assert saved_link.runs[1].bold is True
@@ -95,6 +99,9 @@ def main() -> None:
                 "Fork wheel smoke test",
                 "Editable body text",
                 "Example bold",
+                "Third item",
+                "More detail",
+                "Fourth item",
             ]:
                 raise SystemExit("Installed wheel did not round-trip document content.")
     print(f"Verified {PACKAGE_NAME} {version}")
