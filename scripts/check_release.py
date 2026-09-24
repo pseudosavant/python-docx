@@ -49,6 +49,7 @@ def main() -> None:
 
     if args.installed:
         import docx
+        from docx.shared import Inches
 
         if ROOT / "src" in Path(docx.__file__).resolve().parents:
             raise SystemExit("Wheel smoke test imported the source tree instead of the wheel.")
@@ -79,7 +80,9 @@ def main() -> None:
             picture.description = "Pixel description"
             picture.title = "Pixel title"
             sequence = document.add_list(start=3)
-            sequence.apply(document.add_paragraph("Third item", "List Number"))
+            first_item = document.add_paragraph("Third item", "List Number")
+            assert sequence.continuation_left_indent(first_item) == Inches(0.5)
+            sequence.apply(first_item)
             sequence.apply_continuation(document.add_paragraph("More detail", "List Number"))
             sequence.apply(document.add_paragraph("Fourth item", "List Number"))
             document.bookmarks.add("SmokeHeading", paragraph=document.paragraphs[0])
@@ -88,8 +91,6 @@ def main() -> None:
             note.paragraphs[0].add_hyperlink("Example", address="https://example.com")
             table = document.add_table(rows=2, cols=1)
             table.rows[0].repeat_as_header = True
-            from docx.shared import Inches
-
             table.left_indent = Inches(0.5)
             document.save(output)
             from zipfile import ZipFile

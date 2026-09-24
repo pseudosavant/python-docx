@@ -18,7 +18,7 @@ Version 1.3.6 adds configurable repeating table header rows with `row.repeat_as_
 
 Version 1.3.7 instantiates DOCX documents from macro-free DOTX templates through `Document()`. It builds on coderamaster's [upstream proposal](https://github.com/python-openxml/python-docx/pull/1537), adding output conversion and preservation tests. See the [document documentation](docs/user/documents.rst).
 
-Version 1.3.8 adds `Table.left_indent` for setting a table's direct indentation. See the [table documentation](docs/user/tables.rst).
+Version 1.3.8 adds `Table.left_indent` for setting a table's direct indentation and `ListInstance.continuation_left_indent()` for aligning tables with list text. See the [table documentation](docs/user/tables.rst) and [list documentation](docs/user/lists.rst).
 
 ## Installation
 
