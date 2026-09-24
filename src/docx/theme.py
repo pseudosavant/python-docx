@@ -5,13 +5,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from docx.oxml.ns import qn
-from docx.shared import ElementProxy
 
 if TYPE_CHECKING:
-    from docx.oxml.xmlchemy import BaseOxmlElement
+    from lxml.etree import _Element  # pyright: ignore[reportPrivateUsage]
 
 
-class ThemeFonts(ElementProxy):
+class ThemeFonts:
     """The font scheme used by theme references in a document.
 
     Accessed through :attr:`.Document.theme_fonts`. Changing a typeface does not
@@ -19,8 +18,8 @@ class ThemeFonts(ElementProxy):
     the change. East Asian, complex-script, and supplemental fonts are preserved.
     """
 
-    def __init__(self, element: BaseOxmlElement):
-        super().__init__(element)
+    def __init__(self, element: _Element):
+        self._element = element
         # Validate before any setters can partially update an incomplete scheme.
         self._latin("major")
         self._latin("minor")
@@ -52,13 +51,13 @@ class ThemeFonts(ElementProxy):
     def minor_latin(self, value: str) -> None:
         self._set_latin("minor", value)
 
-    def _latin(self, role: str) -> BaseOxmlElement:
+    def _latin(self, role: str) -> _Element:
         latin = self._element.find(f"{qn(f'a:{role}Font')}/{qn('a:latin')}")
         if latin is None:
             raise ValueError(f"theme font scheme is missing the {role} Latin font")
         return latin
 
-    def _set_latin(self, role: str, value: str) -> None:
+    def _set_latin(self, role: str, value: object) -> None:
         if not isinstance(value, str):
             raise TypeError("theme typeface must be a string")
         latin = self._latin(role)
