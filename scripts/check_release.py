@@ -86,8 +86,12 @@ def main() -> None:
             document.paragraphs[1].add_hyperlink(anchor="SmokeHeading")
             note = document.add_footnote(document.paragraphs[1].runs[0], "A native footnote")
             note.paragraphs[0].add_hyperlink("Example", address="https://example.com")
+            table = document.add_table(rows=2, cols=1)
+            table.rows[0].repeat_as_header = True
             document.save(output)
             reopened = docx.Document(output)
+            assert reopened.tables[0].rows[0].repeat_as_header is True
+            assert reopened.tables[0].rows[1].repeat_as_header is None
             assert len(reopened.footnotes) == 1
             assert reopened.footnotes.get(1).paragraphs[0].hyperlinks[0].url == "https://example.com"
             assert reopened.paragraphs[1].runs[1].footnote_ids == (1,)

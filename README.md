@@ -14,6 +14,8 @@ Version 1.3.4 adds bookmark creation and lookup with `Document.bookmarks`, plus 
 
 Version 1.3.5 adds native footnote authoring and lookup with `Document.add_footnote()`, `Document.footnotes`, and `Run.footnote_ids`. See the [footnote documentation](docs/user/footnotes.rst).
 
+Version 1.3.6 adds configurable repeating table header rows with `row.repeat_as_header`. See the [table documentation](docs/user/tables.rst).
+
 ## Installation
 
 ```

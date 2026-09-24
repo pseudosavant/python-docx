@@ -3,6 +3,13 @@
 Release History
 ---------------
 
+1.3.6 (2026-09-24)
+++++++++++++++++++
+
+- Add tri-state Row.repeat_as_header for configurable repeating table headers.
+- Preserve row formatting and leave new library rows unmarked by default.
+
+
 1.3.5 (2026-09-24)
 ++++++++++++++++++
 
