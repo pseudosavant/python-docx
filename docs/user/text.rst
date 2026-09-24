@@ -446,3 +446,23 @@ When the color type is `MSO_COLOR_TYPE.THEME`, the
 
     >>> font.color.theme_color
     ACCENT_1 (5)
+
+
+Internal hyperlinks
+-------------------
+
+Use ``anchor`` instead of ``address`` to link to a bookmark in the same
+Word document. The link has no external URL relationship::
+
+    paragraph = document.add_paragraph()
+    link = paragraph.add_hyperlink("Details", anchor="Details", tooltip="Jump to details")
+    link.add_run(" here").bold = True
+    heading = document.add_heading("Details")
+    document.bookmarks.add("Details", paragraph=heading)
+
+Supply exactly one destination. Anchor names follow bookmark creation rules.
+Forward references are allowed. The library does not check that a bookmark
+exists, so callers are responsible for resolving their destinations. The
+hyperlink's ``fragment`` property exposes the saved anchor and ``address``
+is empty. External addresses containing URI fragments keep their existing
+behavior.

@@ -32,14 +32,24 @@ class Paragraph(StoryChild):
         self._p = self._element = p
 
     def add_hyperlink(
-        self, text: str | None = None, *, address: str, tooltip: str | None = None
+        self,
+        text: str | None = None,
+        *,
+        address: str | None = None,
+        anchor: str | None = None,
+        tooltip: str | None = None,
     ) -> Hyperlink:
-        """Append an external hyperlink containing `text` and return its proxy.
+        """Append an external or internal hyperlink and return its proxy.
 
         `address` is a non-empty external destination, such as a web URL, mailto
         URI, or relative file path. It is stored unchanged, including any URI
         fragment. No URL encoding or target lookup is performed. Empty addresses
         and fragment-only addresses like ``#bookmark`` raise |ValueError|.
+
+        Alternatively, `anchor` names a bookmark in this document and creates
+        no external relationship. Supply exactly one of `address` or `anchor`.
+        Anchor names follow the bookmark creation rules. Forward references are
+        allowed. The library does not check that a destination exists.
 
         Omit `text` or pass an empty string to create a hyperlink without runs.
         Use :meth:`Hyperlink.add_run` to add individually formatted label runs.
@@ -49,11 +59,21 @@ class Paragraph(StoryChild):
         specifies an empty tooltip. Invalid argument types raise :exc:`TypeError`.
         Strings must contain only characters allowed in XML.
         """
-        XsdString.validate(address)
-        if not address or address.startswith("#"):
-            raise ValueError("address must be a non-empty external destination")
-        # -- validate the XML target before adding a relationship to the part --
-        CT_Relationship.new("rId0", RT.HYPERLINK, address)
+        from docx.bookmarks import validate_bookmark_name
+
+        if address is None and anchor is None:
+            raise TypeError("supply address or anchor")
+        if address is not None and anchor is not None:
+            raise ValueError("supply exactly one of address or anchor")
+        if anchor is not None:
+            validate_bookmark_name(anchor)
+        else:
+            assert address is not None
+            XsdString.validate(address)
+            if not address or address.startswith("#"):
+                raise ValueError("address must be a non-empty external destination")
+            # Validate the target before adding a relationship to the part.
+            CT_Relationship.new("rId0", RT.HYPERLINK, address)
         hyperlink_elm = CT_Hyperlink.new()
         hyperlink = Hyperlink(hyperlink_elm, self)
         hyperlink.tooltip = tooltip
@@ -61,7 +81,11 @@ class Paragraph(StoryChild):
             XsdString.validate(text)
             if text:
                 hyperlink.add_run(text)
-        hyperlink_elm.rId = self.part.relate_to(address, RT.HYPERLINK, is_external=True)
+        if anchor is not None:
+            hyperlink_elm.anchor = anchor
+        else:
+            assert address is not None
+            hyperlink_elm.rId = self.part.relate_to(address, RT.HYPERLINK, is_external=True)
         self._p.append(hyperlink_elm)
         return hyperlink
 
