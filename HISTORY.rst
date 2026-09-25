@@ -3,6 +3,12 @@
 Release History
 ---------------
 
+1.3.10 (2026-09-25)
++++++++++++++++++++
+
+- Add Paragraph.add_horizontal_rule() to create Word's empty-paragraph bottom border rule.
+
+
 1.3.9 (2026-09-24)
 ++++++++++++++++++
 
