@@ -33,6 +33,14 @@ class Paragraph(StoryChild):
         super(Paragraph, self).__init__(parent)
         self._p = self._element = p
 
+    def add_horizontal_rule(self) -> None:
+        """Apply Word's horizontal-rule bottom border to this paragraph.
+
+        Call this on an empty paragraph for the same structure Word creates
+        when its horizontal-line shortcut is used.
+        """
+        self._p.get_or_add_pPr().get_or_add_pBdr().set_horizontal_rule()
+
     def add_checkbox(self, checked: bool = False) -> CheckBox:
         """Append a clickable Word check box and return its proxy.
 
